@@ -10,31 +10,32 @@ export async function POST(req: Request) {
     const user = await User.findOne({ mobile });
 
     if (!user) {
-      return NextResponse.json({ message: "User not found" }, { status: 404 });
+      return NextResponse.json(
+        { message: "User not found" },
+        { status: 404 }
+      );
     }
 
-    if (user.otp !== otp) {
-      return NextResponse.json({ message: "Invalid OTP" }, { status: 400 });
+    if (user.otp !== otp || user.otpExpiry < new Date()) {
+      return NextResponse.json(
+        { message: "Invalid or expired OTP" },
+        { status: 400 }
+      );
     }
 
-    if (user.otpExpiry < new Date()) {
-      return NextResponse.json({ message: "OTP expired" }, { status: 400 });
-    }
-
-    user.isVerified = true;
+    // Clear OTP after verification
     user.otp = null;
     user.otpExpiry = null;
-    await user.save();
+    await user.save();  
 
-    // return NextResponse.json(
-    //   { message: "OTP Verified Successfully" },
-    //   { status: 200 }
-    // );
     return NextResponse.json(
-      { message: "OTP Verified Successfully", mobile: user.mobile },
-      { status: 200 },
+      { message: "OTP Verified Successfully" },
+      { status: 200 }
     );
   } catch (error) {
-    return NextResponse.json({ message: "Server Error" }, { status: 500 });
+    return NextResponse.json(
+      { message: "Server Error" },
+      { status: 500 }
+    );
   }
 }

@@ -2,15 +2,13 @@ import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema(
   {
-    fullName: String,
-    mobile: { type: String, unique: true },
-    aadhar: { type: String, unique: true },
-    otp: String,
-    otpExpiry: Date,
-    isVerified: { type: Boolean, default: false },
+    fullName: { type: String, required: true },
+    mobile: { type: String, required: true, unique: true },
+    aadhar: { type: String, required: true, unique: true },
+    otp: { type: String },
+    otpExpiry: { type: Date },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
-export default mongoose.models.User ||
-  mongoose.model("User", userSchema);
+export default mongoose.models.User || mongoose.model("User", userSchema);

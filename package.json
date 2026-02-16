@@ -10,10 +10,12 @@
   },
   "dependencies": {
     "aadhaar-validator": "^1.1.0",
+    "firebase": "^12.9.0",
     "mongoose": "^8.23.0",
     "next": "16.1.6",
     "react": "19.2.3",
-    "react-dom": "19.2.3"
+    "react-dom": "19.2.3",
+    "twilio": "^5.12.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
