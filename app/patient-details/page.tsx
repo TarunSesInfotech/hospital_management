@@ -14,7 +14,8 @@ export default function PatientPage() {
   const [token, setToken] = useState<number | null>(null);
 
   // ✅ Hardcoded Hospital Data
-  const hospitalName = "City Care Multi-Speciality Hospital";
+  // const hospitalName = "City Care Multi-Speciality Hospital";
+  const hospitalName = "MGH Hospital";
 
   const services = ["Cardiology", "Orthopedics", "Neurology", "Pediatrics"];
 

@@ -47,7 +47,7 @@ export default function RegisterPage() {
         onSubmit={handleSubmit}
         className="bg-white p-6 rounded-xl w-full max-w-md space-y-3"
       >
-        <h2 className="text-xl font-bold text-center"> Hospital Managment Register</h2>
+        <h2 className="text-xl font-bold text-center"> Hospital OPD Managment System</h2>
 
         <input
           name="fullName"
