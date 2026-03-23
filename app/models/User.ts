@@ -5,15 +5,18 @@ const userSchema = new mongoose.Schema(
     fullName: { type: String, required: true },
     mobile: { type: String, required: true, unique: true },
     aadhar: { type: String, required: true, unique: true },
-        role: { 
+    role: { 
       type: String, 
       enum: ["patient", "doctor"], 
       default: "patient" 
     },
     otp: { type: String },
     otpExpiry: { type: Date },
+    doctor: { type: String },
+    tokenNumber: { type: Number },
+    tokenDate: { type: Date },
   },
-  { timestamps: true },
+  { timestamps: true }
 );
 
 export default mongoose.models.User || mongoose.model("User", userSchema);

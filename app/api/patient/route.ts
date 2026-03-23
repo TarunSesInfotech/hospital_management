@@ -1,4 +1,3 @@
-
 import { NextResponse } from "next/server";
 import connectDB from "@/app/lib/mongodb";
 import User from "@/app/models/User";
@@ -7,28 +6,18 @@ export async function POST(req: Request) {
   try {
     await connectDB();
 
-    // ✅ FIX: body define kiya
     const body = await req.json();
     const { mobile } = body;
 
-    // ✅ CASE 1: Doctors fetch
     if (body.type === "getDoctors") {
       const doctors = await User.find({ role: "doctor" });
-
-      return NextResponse.json(
-        { doctors },
-        { status: 200 }
-      );
+      return NextResponse.json({ doctors }, { status: 200 });
     }
 
-    // ✅ CASE 2: Patient fetch
     const user = await User.findOne({ mobile });
 
     if (!user) {
-      return NextResponse.json(
-        { message: "User not found" },
-        { status: 404 }
-      );
+      return NextResponse.json({ message: "User not found" }, { status: 404 });
     }
 
     return NextResponse.json(
@@ -40,11 +29,7 @@ export async function POST(req: Request) {
       },
       { status: 200 }
     );
-
   } catch (error) {
-    return NextResponse.json(
-      { message: "Server Error" },
-      { status: 500 }
-    );
+    return NextResponse.json({ message: "Server Error" }, { status: 500 });
   }
 }

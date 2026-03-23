@@ -13,8 +13,6 @@ export default function PatientPage() {
   const [selectedDoctor, setSelectedDoctor] = useState("");
   const [token, setToken] = useState<number | null>(null);
 
-  // ✅ Hardcoded Hospital Data
-  // const hospitalName = "City Care Multi-Speciality Hospital";
   const hospitalName = "MGH Hospital";
 
   const services = ["Cardiology", "Orthopedics", "Neurology", "Pediatrics"];
@@ -28,9 +26,7 @@ export default function PatientPage() {
   ];
 
   const filteredDoctors = selectedService
-    ? doctors
-        .filter((doc) => doc.service === selectedService)
-        .map((doc) => doc.name)
+    ? doctors.filter((doc) => doc.service === selectedService)
     : [];
 
   useEffect(() => {
@@ -72,6 +68,12 @@ export default function PatientPage() {
 
     if (res.ok) {
       setToken(data.tokenNumber);
+      localStorage.setItem("slipData", JSON.stringify({
+        patientName: patient?.fullName,
+        doctorName: selectedDoctor,
+        service: selectedService,
+        tokenNumber: data.tokenNumber,
+      }));
     } else {
       alert(data.message);
     }
@@ -83,7 +85,6 @@ export default function PatientPage() {
   return (
     <div className="min-h-screen bg-blue-50 p-6">
       <div className="max-w-4xl mx-auto bg-white p-6 rounded-2xl shadow-xl">
-        {/* Patient Details */}
         <div className="flex flex-wrap justify-between font-medium">
           <p>
             <strong>Name:</strong> {patient.fullName}
@@ -102,10 +103,12 @@ export default function PatientPage() {
           {hospitalName}
         </h2>
 
-        {/* Service Dropdown */}
         <select
           value={selectedService}
-          onChange={(e) => setSelectedService(e.target.value)}
+          onChange={(e) => {
+            setSelectedService(e.target.value);
+            setSelectedDoctor("");
+          }}
           className="w-full border p-3 rounded-lg mb-4"
         >
           <option value="">-- Select Service --</option>
@@ -116,17 +119,17 @@ export default function PatientPage() {
           ))}
         </select>
 
-        {/* Doctor Dropdown */}
         {selectedService && (
           <>
             <select
               className="w-full border p-3 rounded-lg mb-3"
               onChange={(e) => setSelectedDoctor(e.target.value)}
+              value={selectedDoctor}
             >
               <option value="">-- Select Doctor --</option>
               {filteredDoctors.map((doc) => (
-                <option key={doc} value={doc}>
-                  {doc}
+                <option key={doc.name} value={doc.name}>
+                  {doc.name}
                 </option>
               ))}
             </select>
@@ -142,7 +145,6 @@ export default function PatientPage() {
           </>
         )}
 
-        {/* Token Display */}
         {token && (
           <div className="mt-6 p-4 bg-yellow-100 text-center rounded-lg">
             <h3 className="text-lg font-bold text-yellow-700">
@@ -151,6 +153,12 @@ export default function PatientPage() {
             <p className="text-4xl font-extrabold text-yellow-800 mt-2">
               {token}
             </p>
+            <button
+              onClick={() => router.push("/slip")}
+              className="mt-4 bg-green-600 text-white px-6 py-2 rounded-lg"
+            >
+              View Slip
+            </button>
           </div>
         )}
 

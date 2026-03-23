@@ -9,15 +9,19 @@ export async function POST(req: Request) {
     const { mobile, doctor } = await req.json();
 
     if (!mobile || !doctor) {
-      return NextResponse.json(
-        { message: "Missing data" },
-        { status: 400 }
-      );
+      return NextResponse.json({ message: "Missing data" }, { status: 400 });
     }
 
-    // 🔥 Find last token for this doctor
-    const lastPatient = await User.findOne({ doctor })
-      .sort({ tokenNumber: -1 });
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+
+    const lastPatient = await User.findOne({
+      doctor,
+      tokenDate: { $gte: today, $lt: tomorrow }
+    }).sort({ tokenNumber: -1 });
 
     let newToken = 1;
 
@@ -27,18 +31,12 @@ export async function POST(req: Request) {
 
     await User.findOneAndUpdate(
       { mobile },
-      { doctor, tokenNumber: newToken },
+      { doctor, tokenNumber: newToken, tokenDate: new Date() },
       { new: true }
     );
 
-    return NextResponse.json(
-      { tokenNumber: newToken },
-      { status: 200 }
-    );
+    return NextResponse.json({ tokenNumber: newToken }, { status: 200 });
   } catch (error) {
-    return NextResponse.json(
-      { message: "Server Error" },
-      { status: 500 }
-    );
+    return NextResponse.json({ message: "Server Error" }, { status: 500 });
   }
 }
