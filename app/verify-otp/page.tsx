@@ -45,7 +45,7 @@ export default function VerifyOTP() {
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-blue-100">
-      <div className="bg-white p-6 rounded-xl w-80 space-y-3 text-center">
+      <div className="bg-black p-6 rounded-xl w-80 space-y-3 text-center">
         <h2 className="text-xl font-bold">Enter OTP</h2>
 
         <input

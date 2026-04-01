@@ -1,14 +1,40 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+
 export default function SlipPage() {
+  const router = useRouter();
+  const [slipData, setSlipData] = useState<any>(null);
+
+  useEffect(() => {
+    const data = localStorage.getItem("slipData");
+    if (data) {
+      setSlipData(JSON.parse(data));
+    }
+  }, []);
+
   const handlePrint = () => {
     window.print();
   };
 
+  if (!slipData) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center gap-4">
+        <p className="text-gray-500">No slip data found. Please generate a token first.</p>
+        <button
+          onClick={() => router.push("/patient-details")}
+          className="bg-blue-600 text-white px-6 py-2 rounded-lg"
+        >
+          Go to Patient Details
+        </button>
+      </div>
+    );
+  }
+
   return (
     <div className="page-wrapper min-h-screen bg-gray-100 flex items-start justify-center p-4 sm:p-6 md:p-10 print:bg-white print:p-0">
-      {/* Slip Card */}
-      <div className="slip w-full max-w-[360px] bg-white rounded-xl shadow-lg border border-gray-200 p-4 sm:p-5 md:p-6 print:shadow-none print:border-none print:rounded-none print:p-3">
+      <div className="slip w-full max-w-[360px] bg-black rounded-xl shadow-lg border border-gray-200 p-4 sm:p-5 md:p-6 print:shadow-none print:border-none print:rounded-none print:p-3">
         <h2 className="text-base sm:text-lg md:text-xl font-bold text-center mb-4 border-b pb-2">
           Hospital Payment Slip
         </h2>
@@ -24,22 +50,22 @@ export default function SlipPage() {
 
           <p className="flex justify-between gap-3 border-b pb-1">
             <strong>Patient Name:</strong>
-            <span className="text-right">Tarun Kushwah</span>
+            <span className="text-right">{slipData.patientName}</span>
           </p>
 
           <p className="flex justify-between gap-3 border-b pb-1">
             <strong>Doctor Name:</strong>
-            <span className="text-right">Dr. Sharma</span>
+            <span className="text-right">{slipData.doctorName}</span>
           </p>
 
           <p className="flex justify-between gap-3 border-b pb-1">
             <strong>Service:</strong>
-            <span className="text-right">Cardiology</span>
+            <span className="text-right">{slipData.service}</span>
           </p>
 
           <p className="flex justify-between gap-3 border-b pb-1">
             <strong>Token No:</strong>
-            <span className="text-right">1</span>
+            <span className="text-right">{slipData.tokenNumber}</span>
           </p>
         </div>
 
@@ -50,7 +76,6 @@ export default function SlipPage() {
           Print Slip
         </button>
       </div>
-
 
       <style jsx>{`
         @media print {
@@ -81,7 +106,7 @@ export default function SlipPage() {
             position: absolute;
             left: 8px;
             top: 0;
-            width: 80mm !important; 
+            width: 80mm !important;
             max-width: 80mm !important;
             margin: 8px 0 !important;
             padding: 8px !important;

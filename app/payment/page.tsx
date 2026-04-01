@@ -12,7 +12,7 @@ export default function PaymentPage() {
 
   return (
     <div className="min-h-screen flex justify-center items-center bg-blue-50 p-6">
-      <div className="bg-white p-8 rounded-2xl shadow-xl text-center w-96">
+      <div className="bg-black p-8 rounded-2xl shadow-xl text-center w-96">
 
         <h2 className="text-2xl font-bold text-blue-700 mb-4">
           ₹5 Registration Fee

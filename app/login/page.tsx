@@ -4,37 +4,25 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-export default function RegisterPage() {
+export default function LoginPage() {
   const router = useRouter();
 
-  const [formData, setFormData] = useState({
-    fullName: "",
-    mobile: "",
-    aadhar: "",
-  });
-
+  const [mobile, setMobile] = useState("");
   const [error, setError] = useState("");
-
-  const handleChange = (e: any) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
 
-    const res = await fetch("/api/register", {
+    const res = await fetch("/api/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(formData),
+      body: JSON.stringify({ mobile }),
     });
 
     const data = await res.json();
 
     if (res.ok) {
-      localStorage.setItem("verifyMobile", formData.mobile);
+      localStorage.setItem("verifyMobile", mobile);
       router.push("/verify-otp");
     } else {
       setError(data.message);
@@ -47,32 +35,28 @@ export default function RegisterPage() {
         onSubmit={handleSubmit}
         className="bg-black p-6 rounded-xl w-full max-w-md space-y-3"
       >
-        <h2 className="text-xl font-bold text-center"> Hospital OPD Managment System</h2>
+        <h2 className="text-xl font-bold text-center">Hospital OPD - Login</h2>
 
         <input
-          name="fullName"
-          placeholder="Full Name"
-          onChange={handleChange}
-          className="w-full border p-2 rounded"
-        />
-        <input
           name="mobile"
-          placeholder="Mobile"
-          onChange={handleChange}
-          className="w-full border p-2 rounded"
-        />
-        <input
-          name="aadhar"
-          placeholder="Aadhar"
-          onChange={handleChange}
+          placeholder="Phone Number"
+          value={mobile}
+          onChange={(e) => setMobile(e.target.value)}
           className="w-full border p-2 rounded"
         />
 
         {error && <p className="text-red-500 text-sm">{error}</p>}
 
         <button className="w-full bg-blue-600 text-white p-2 rounded">
-          Register
+          Send OTP
         </button>
+
+        <p className="text-center text-sm">
+          New user?{" "}
+          <a href="/register" className="text-blue-600 underline">
+            Register
+          </a>
+        </p>
       </form>
     </div>
   );

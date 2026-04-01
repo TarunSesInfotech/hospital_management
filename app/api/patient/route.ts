@@ -5,15 +5,19 @@ import User from "@/app/models/User";
 export async function POST(req: Request) {
   try {
     await connectDB();
-    const { mobile } = await req.json();
+
+    const body = await req.json();
+    const { mobile } = body;
+
+    if (body.type === "getDoctors") {
+      const doctors = await User.find({ role: "doctor" });
+      return NextResponse.json({ doctors }, { status: 200 });
+    }
 
     const user = await User.findOne({ mobile });
 
     if (!user) {
-      return NextResponse.json(
-        { message: "User not found" },
-        { status: 404 }
-      );
+      return NextResponse.json({ message: "User not found" }, { status: 404 });
     }
 
     return NextResponse.json(
@@ -21,14 +25,14 @@ export async function POST(req: Request) {
         fullName: user.fullName,
         mobile: user.mobile,
         aadhar: user.aadhar,
-        createdAt: user.createdAt,  
+        doctor: user.doctor,
+        service: user.service,
+        tokenNumber: user.tokenNumber,
+        tokenDate: user.tokenDate,
       },
       { status: 200 }
     );
   } catch (error) {
-    return NextResponse.json(
-      { message: "Server Error" },
-      { status: 500 }
-    );
+    return NextResponse.json({ message: "Server Error" }, { status: 500 });
   }
 }

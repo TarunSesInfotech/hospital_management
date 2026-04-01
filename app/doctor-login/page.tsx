@@ -4,15 +4,13 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-export default function RegisterPage() {
+export default function DoctorLoginPage() {
   const router = useRouter();
 
   const [formData, setFormData] = useState({
-    fullName: "",
     mobile: "",
-    aadhar: "",
+    password: "",
   });
-
   const [error, setError] = useState("");
 
   const handleChange = (e: any) => {
@@ -25,7 +23,7 @@ export default function RegisterPage() {
   const handleSubmit = async (e: any) => {
     e.preventDefault();
 
-    const res = await fetch("/api/register", {
+    const res = await fetch("/api/doctor-login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(formData),
@@ -34,8 +32,8 @@ export default function RegisterPage() {
     const data = await res.json();
 
     if (res.ok) {
-      localStorage.setItem("verifyMobile", formData.mobile);
-      router.push("/verify-otp");
+      localStorage.setItem("doctorData", JSON.stringify(data.doctor));
+      router.push("/doctor-dashboard");
     } else {
       setError(data.message);
     }
@@ -47,32 +45,40 @@ export default function RegisterPage() {
         onSubmit={handleSubmit}
         className="bg-black p-6 rounded-xl w-full max-w-md space-y-3"
       >
-        <h2 className="text-xl font-bold text-center"> Hospital OPD Managment System</h2>
+        <h2 className="text-xl font-bold text-center">Doctor Login</h2>
 
         <input
-          name="fullName"
-          placeholder="Full Name"
-          onChange={handleChange}
-          className="w-full border p-2 rounded"
-        />
-        <input
           name="mobile"
-          placeholder="Mobile"
+          placeholder="Phone Number"
           onChange={handleChange}
           className="w-full border p-2 rounded"
         />
         <input
-          name="aadhar"
-          placeholder="Aadhar"
+          name="password"
+          type="password"
+          placeholder="Password"
           onChange={handleChange}
           className="w-full border p-2 rounded"
         />
 
         {error && <p className="text-red-500 text-sm">{error}</p>}
 
-        <button className="w-full bg-blue-600 text-white p-2 rounded">
-          Register
+        <button className="w-full bg-green-600 text-black p-2 rounded">
+          Login
         </button>
+
+        <p className="text-center text-sm">
+          New doctor?{" "}
+          <a href="/doctor-register" className="text-green-600 underline">
+            Register
+          </a>
+        </p>
+
+        <p className="text-center text-sm">
+          <a href="/" className="text-blue-600 underline">
+            Patient Login
+          </a>
+        </p>
       </form>
     </div>
   );
