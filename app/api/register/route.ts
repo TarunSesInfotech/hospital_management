@@ -8,6 +8,8 @@ import AadhaarValidator from "aadhaar-validator";
 export async function POST(req: Request) {
   try {
     await connectDB();
+   
+     
     const { fullName, mobile, aadhar } = await req.json();
 
     if (!fullName || !mobile || !aadhar) {
@@ -59,6 +61,7 @@ export async function POST(req: Request) {
       { status: 201 }
     );
   } catch (error) {
+    console.error("Registration Error:", error);
     return NextResponse.json(
       { message: "Server Error" },
       { status: 500 }

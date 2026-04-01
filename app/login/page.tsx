@@ -33,7 +33,7 @@ export default function LoginPage() {
     <div className="flex justify-center items-center min-h-screen bg-blue-100">
       <form
         onSubmit={handleSubmit}
-        className="bg-white p-6 rounded-xl w-full max-w-md space-y-3"
+        className="bg-black p-6 rounded-xl w-full max-w-md space-y-3"
       >
         <h2 className="text-xl font-bold text-center">Hospital OPD - Login</h2>
 

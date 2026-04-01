@@ -34,7 +34,7 @@ export default function SlipPage() {
 
   return (
     <div className="page-wrapper min-h-screen bg-gray-100 flex items-start justify-center p-4 sm:p-6 md:p-10 print:bg-white print:p-0">
-      <div className="slip w-full max-w-[360px] bg-white rounded-xl shadow-lg border border-gray-200 p-4 sm:p-5 md:p-6 print:shadow-none print:border-none print:rounded-none print:p-3">
+      <div className="slip w-full max-w-[360px] bg-black rounded-xl shadow-lg border border-gray-200 p-4 sm:p-5 md:p-6 print:shadow-none print:border-none print:rounded-none print:p-3">
         <h2 className="text-base sm:text-lg md:text-xl font-bold text-center mb-4 border-b pb-2">
           Hospital Payment Slip
         </h2>

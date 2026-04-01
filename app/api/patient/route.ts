@@ -25,7 +25,10 @@ export async function POST(req: Request) {
         fullName: user.fullName,
         mobile: user.mobile,
         aadhar: user.aadhar,
-        createdAt: user.createdAt,
+        doctor: user.doctor,
+        service: user.service,
+        tokenNumber: user.tokenNumber,
+        tokenDate: user.tokenDate,
       },
       { status: 200 }
     );

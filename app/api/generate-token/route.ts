@@ -6,9 +6,9 @@ export async function POST(req: Request) {
   try {
     await connectDB();
 
-    const { mobile, doctor } = await req.json();
+    const { mobile, doctor, service } = await req.json();
 
-    if (!mobile || !doctor) {
+    if (!mobile || !doctor || !service) {
       return NextResponse.json({ message: "Missing data" }, { status: 400 });
     }
 
@@ -24,14 +24,16 @@ export async function POST(req: Request) {
     }).sort({ tokenNumber: -1 });
 
     let newToken = 1;
+   
 
+  
     if (lastPatient && lastPatient.tokenNumber) {
       newToken = lastPatient.tokenNumber + 1;
     }
 
     await User.findOneAndUpdate(
       { mobile },
-      { doctor, tokenNumber: newToken, tokenDate: new Date() },
+      { doctor, service, tokenNumber: newToken, tokenDate: new Date() },
       { new: true }
     );
 
