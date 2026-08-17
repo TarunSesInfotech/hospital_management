@@ -7,6 +7,15 @@ const userSchema = new mongoose.Schema(
     aadhar: { type: String, required: true, unique: true },
     otp: { type: String },
     otpExpiry: { type: Date },
+    tokenNumber: {
+      type: Number,
+      default: null,
+    },
+
+    tokenDate: {
+      type: String,
+      default: null,
+    },
   },
   { timestamps: true },
 );

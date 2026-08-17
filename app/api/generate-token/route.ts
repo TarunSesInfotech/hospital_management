@@ -10,32 +10,79 @@ export async function POST(req: Request) {
 
     if (!mobile || !doctor) {
       return NextResponse.json(
-        { message: "Missing data" },
+        { message: "Mobile and doctor are required" },
         { status: 400 }
       );
     }
 
-    // 🔥 Find last token for this doctor
-    const lastPatient = await User.findOne({ doctor })
-      .sort({ tokenNumber: -1 });
+    // Patient find karo
+    const patient = await User.findOne({ mobile });
 
-    let newToken = 1;
-
-    if (lastPatient && lastPatient.tokenNumber) {
-      newToken = lastPatient.tokenNumber + 1;
+    if (!patient) {
+      return NextResponse.json(
+        { message: "Patient not found" },
+        { status: 404 }
+      );
     }
 
-    await User.findOneAndUpdate(
-      { mobile },
-      { doctor, tokenNumber: newToken },
-      { new: true }
-    );
+    // Aaj ki date
+    const today = new Date().toISOString().split("T")[0];
+
+    /*
+      Agar patient ko aaj already token mil chuka hai,
+      to wahi token return karo.
+    */
+    if (
+      patient.tokenNumber &&
+      patient.tokenDate === today
+    ) {
+      return NextResponse.json(
+        {
+          message: "Existing token",
+          tokenNumber: patient.tokenNumber,
+        },
+        { status: 200 }
+      );
+    }
+
+    /*
+      Aaj ka last token find karo
+    */
+    const lastPatient = await User.findOne({
+      tokenDate: today,
+      tokenNumber: { $exists: true, $ne: null },
+    }).sort({
+      tokenNumber: -1,
+    });
+
+    /*
+      Agar aaj koi token nahi hai
+      to token 1 se start hoga
+    */
+    const newToken = lastPatient?.tokenNumber
+      ? lastPatient.tokenNumber + 1
+      : 1;
+
+    /*
+      Token patient ke database record mein save karo
+    */
+    patient.doctor = doctor;
+    patient.tokenNumber = newToken;
+    patient.tokenDate = today;
+
+    await patient.save();
 
     return NextResponse.json(
-      { tokenNumber: newToken },
+      {
+        message: "Token generated successfully",
+        tokenNumber: newToken,
+      },
       { status: 200 }
     );
+
   } catch (error) {
+    console.error("Generate token error:", error);
+
     return NextResponse.json(
       { message: "Server Error" },
       { status: 500 }

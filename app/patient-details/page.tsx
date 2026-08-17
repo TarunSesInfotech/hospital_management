@@ -13,8 +13,6 @@ export default function PatientPage() {
   const [selectedDoctor, setSelectedDoctor] = useState("");
   const [token, setToken] = useState<number | null>(null);
 
-  // ✅ Hardcoded Hospital Data
-  // const hospitalName = "City Care Multi-Speciality Hospital";
   const hospitalName = "MGH Hospital";
 
   const services = ["Cardiology", "Orthopedics", "Neurology", "Pediatrics"];
@@ -72,6 +70,17 @@ export default function PatientPage() {
 
     if (res.ok) {
       setToken(data.tokenNumber);
+
+      // Save slip details
+      localStorage.setItem(
+        "slipData",
+        JSON.stringify({
+          patientName: patient.fullName,
+          doctorName: selectedDoctor,
+          service: selectedService,
+          tokenNumber: data.tokenNumber,
+        }),
+      );
     } else {
       alert(data.message);
     }
@@ -108,7 +117,7 @@ export default function PatientPage() {
           onChange={(e) => setSelectedService(e.target.value)}
           className="w-full border p-3 rounded-lg mb-4"
         >
-          <option value="">-- Select Service --</option>
+          <option value="">-- Select Department --</option>
           {services.map((service) => (
             <option key={service} value={service}>
               {service}

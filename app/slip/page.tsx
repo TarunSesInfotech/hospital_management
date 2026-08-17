@@ -1,6 +1,23 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 "use client";
+import { useEffect, useState } from "react";
+interface SlipData {
+  patientName: string;
+  doctorName: string;
+  service: string;
+  tokenNumber: number;
+}
 
 export default function SlipPage() {
+  const [slipData, setSlipData] = useState<SlipData | null>(null);
+
+  useEffect(() => {
+    const savedSlipData = localStorage.getItem("slipData");
+    if (savedSlipData) {
+      setSlipData(JSON.parse(savedSlipData));
+    }
+  }, []);
+
   const handlePrint = () => {
     window.print();
   };
@@ -24,22 +41,22 @@ export default function SlipPage() {
 
           <p className="flex justify-between gap-3 border-b pb-1">
             <strong>Patient Name:</strong>
-            <span className="text-right">Tarun Kushwah</span>
+            <span className="text-right">{slipData?.patientName}</span>
           </p>
 
           <p className="flex justify-between gap-3 border-b pb-1">
             <strong>Doctor Name:</strong>
-            <span className="text-right">Dr. Sharma</span>
+            <span className="text-right">{slipData?.doctorName}</span>
           </p>
 
           <p className="flex justify-between gap-3 border-b pb-1">
             <strong>Service:</strong>
-            <span className="text-right">Cardiology</span>
+            <span className="text-right">{slipData?.service}</span>
           </p>
 
           <p className="flex justify-between gap-3 border-b pb-1">
             <strong>Token No:</strong>
-            <span className="text-right">1</span>
+            <span className="text-right">{slipData?.tokenNumber}</span>
           </p>
         </div>
 
@@ -50,7 +67,6 @@ export default function SlipPage() {
           Print Slip
         </button>
       </div>
-
 
       <style jsx>{`
         @media print {
@@ -81,7 +97,7 @@ export default function SlipPage() {
             position: absolute;
             left: 8px;
             top: 0;
-            width: 80mm !important; 
+            width: 80mm !important;
             max-width: 80mm !important;
             margin: 8px 0 !important;
             padding: 8px !important;
